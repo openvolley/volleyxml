@@ -1,0 +1,29 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "tools/README-"
+)
+```
+
+# volleyxml
+
+[![Travis-CI Build Status](https://travis-ci.org/raymondben/volleyxml.svg?branch=master)](https://travis-ci.org/raymondben/volleyxml)
+
+An R package for reading volleyball scouting files in XML format.
+
+See also the [datavolley R package](https://github.com/raymondben/datavolley) for DataVolley files.
+
+## Installation
+
+```{r eval=FALSE}
+library(devtools)
+install_github("raymondben/volleyxml")
+```
+

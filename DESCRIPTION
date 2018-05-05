@@ -1,0 +1,21 @@
+Package: volleyxml
+Title: Reading and Analyzing XML Volleyball Scouting Files
+Version: 0.0.1
+Authors@R: person("Ben", "Raymond", , "ben@untan.gl", role = c("aut", "cre"))
+Description: Provides basic functions for parsing volleyball scouting files in xml format.
+Depends:
+    R (>= 3.2.4)
+Imports:
+    assertthat,
+    digest,
+    dplyr,
+    lubridate,
+    rlang,
+    stringr,
+    xml2
+Suggests:
+    testthat
+Encoding: UTF-8
+License: MIT + file LICENSE
+LazyData: true
+RoxygenNote: 6.0.1
