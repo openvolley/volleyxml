@@ -66,6 +66,9 @@ vx_read <- function(filename) {
     plays <- bind_rows(lapply(plays, play2df))
     plays <- dplyr::rename(plays, skill="type", player_number="playerJersey", evaluation_code="quality", evaluation="result") ##setter_position="rotation",
     plays <- dplyr::mutate_at(plays, c("amount", "team1Score", "team2Score"), .funs=as.integer)
+    plays <- dplyr::mutate(plays, skill=case_when(.data$skill %eq% "pass"~"Reception",
+                                                  TRUE~str_to_title(.data$skill)),
+                           evaluation=str_to_title(.data$evaluation))
     plays$player_id <- plays$player_number ## use player number as player_id in the absence of anything else
     ## validations
     ## all team entries must be "1", "2", or NA
@@ -73,8 +76,8 @@ vx_read <- function(filename) {
     ## postprocess plays frame
     ## track scoreAdjustment to give team scores
     home_team_score <- visiting_team_score <- set_number <- rep(NA_integer_, nrow(plays))
-    saidx <- plays$skill %eq% "scoreAdjustment"
-    bsidx <- plays$skill %eq% "beginSet"
+    saidx <- plays$skill %eq% "Scoreadjustment"
+    bsidx <- plays$skill %eq% "Beginset"
     setnum <- NA_integer_
     for (ri in seq_len(nrow(plays))[-1]) {
         if (bsidx[ri]) {
@@ -103,7 +106,7 @@ vx_read <- function(filename) {
     plays$visiting_team_score <- visiting_team_score
     plays$set_number <- set_number
     ## should now be finished with scoreAdjustment rows and the amount column
-    plays <- plays[!plays$skill %eq% "scoreAdjustment", ]
+    plays <- plays[!plays$skill %eq% "Scoreadjustment", ]
     if (!all(is.na(plays$amount))) {
         warning("non-NA entries in amount column that are not associated with scoreAdjustment")
     } else {
@@ -131,14 +134,14 @@ vx_read <- function(filename) {
     meta$match_id <- digest(temp)
     ## double check that any entries in team1Score and team2Score match our score columns
     tsok <- TRUE
-    chk1 <- mutate(dplyr::filter(plays, .data$skill %eq% "endSet" & !is.na(.data$team1Score)), ok=.data$team1Score %eq% .data$home_team_score)
-    chk2 <- mutate(dplyr::filter(plays, .data$skill %eq% "endSet" & !is.na(.data$team2Score)), ok=.data$team2Score %eq% .data$visiting_team_score)
+    chk1 <- mutate(dplyr::filter(plays, .data$skill %eq% "Endset" & !is.na(.data$team1Score)), ok=.data$team1Score %eq% .data$home_team_score)
+    chk2 <- mutate(dplyr::filter(plays, .data$skill %eq% "Endset" & !is.na(.data$team2Score)), ok=.data$team2Score %eq% .data$visiting_team_score)
     chk <- c(chk1$row_id[!chk1$ok], chk2$row_id[!chk2$ok])
     if (length(chk)>0) {
         tsok <- FALSE
         warning("score mismatches at row(s): ", paste(chk, collapse=", "))
     }
-    chk <- dplyr::filter(plays, .data$skill %eq% "endMatch")
+    chk <- dplyr::filter(plays, .data$skill %eq% "Endmatch")
     if (nrow(chk)<1) {
         warning("missing endMatch row")
     } else if (nrow(chk)>1) {
@@ -150,7 +153,7 @@ vx_read <- function(filename) {
         }
     }
     ## any other team1Score, team2Score entries?
-    chk <- dplyr::filter(plays, !.data$skill %in% c("endSet", "endMatch") & (!is.na(.data$team1Score) | !is.na(.data$team2Score)))
+    chk <- dplyr::filter(plays, !.data$skill %in% c("Endset", "Endmatch") & (!is.na(.data$team1Score) | !is.na(.data$team2Score)))
     if (nrow(chk)>0) {
         tsok <- FALSE
         warning("team1Score or team2Score entries in unexpected row(s): ", paste(chk$row_id, collapse=", "))
