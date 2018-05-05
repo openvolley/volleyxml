@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 An R package for reading volleyball scouting files in XML format.
 
-See also the [datavolley R package](https://github.com/raymondben/datavolley) for DataVolley files.
+See also the [datavolley R package](https://github.com/raymondben/datavolley) for DataVolley files. Note that the data structures and conventions returned by `volleyxml` have been chosen to be similar (partly compatible) with those of the `datavolley` package.
 
 ## Installation
 
@@ -27,3 +27,11 @@ library(devtools)
 install_github("raymondben/volleyxml")
 ```
 
+## Example
+
+Read the example data file bundled with the package:
+```{r}
+library(volleyxml)
+x <- vx_read(vx_example_file())
+summary(x)
+```
