@@ -16,6 +16,7 @@
 vx_read <- function(filename) {
     assert_that(is.string(filename))
     x <- read_xml(filename)
+    xraw <- as.character(x)
     ##xml_find_all(x, "//d1:session") %>% as.character
     ##[1] "<session>\n  <startTimeUtc>2018-03-17 14:11:16.25 +1000</startTimeUtc>\n  <dataProvider>\n    <name>iStatVball 2</name>\n    <version>2.19.4.2</version>\n  </dataProvider>\n  <teams>\n    <team>\n      <key>1</key>\n      <value>First VI 2018</value>\n    </team>\n    <team>\n      <key>2</key>\n      <value>TGS</value>\n    </team>\n  </teams>\n</session>"
     ## match metadata
@@ -161,7 +162,7 @@ vx_read <- function(filename) {
     colorder <- c("row_id", "video_time", "set_number", "home_team", "visiting_team", "team", "rotation", "player_id", "player_number", "skill", "evaluation_code", "evaluation", "home_team_score", "visiting_team_score")
     colorder <- c(colorder, setdiff(colorder, names(plays)))
     plays <- plays[, colorder]
-    out <- list(meta=meta, plays=plays)
+    out <- list(meta=meta, plays=plays, raw=xraw)
     class(out) <- c("volleyxml", class(out))
     out
 }
@@ -205,8 +206,8 @@ plays <- function(x) {
 summary.volleyxml <- function(object, ...) {
     out <- list(date=object$meta$match$date) ##,league=object$meta$match$league)
     out$teams <- object$meta$teams[, c("team", "sets_won")] ##"coach","assistant",
-    temp <- object$meta$result$score_home_team>object$meta$result$score_visiting_team
-    out$set_scores <- object$meta$result[,c("home_team_score","visiting_team_score")]
+    temp <- object$meta$result$home_team_score>object$meta$result$visiting_team_score
+    out$set_scores <- as.data.frame(object$meta$result[,c("home_team_score","visiting_team_score")])
     ## make extra sure that set_scores has home team assigned correctly
     if (object$meta$teams$home_away_team[1]!="*") { out$set_scores <- out$set_scores[,2:1] }
     out$set_scores <- na.omit(out$set_scores)
