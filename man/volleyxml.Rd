@@ -3,11 +3,7 @@
 \docType{package}
 \name{volleyxml}
 \alias{volleyxml}
-\alias{volleyxml-package}
 \title{\pkg{volleyxml}}
 \description{
 Provides basic functions for parsing volleyball scouting files in XML format.
-}
-\author{
-Ben Raymond \email{ben@untan.gl}
 }

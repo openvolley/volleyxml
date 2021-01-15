@@ -3,7 +3,6 @@
 #' Provides basic functions for parsing volleyball scouting files in XML format.
 #' 
 #' @name volleyxml
-#' @author Ben Raymond \email{ben@@untan.gl}
 #' @docType package
 #' @importFrom assertthat assert_that is.string
 #' @importFrom digest digest
